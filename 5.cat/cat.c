@@ -13,8 +13,7 @@ main(int argc, char *argv[])
 {
     int i;
     if (argc < 2) {
-        fprintf(stderr, "%s: file name not given\n", argv[0]);
-        exit(1);
+        do_cat(NULL);
     }
     for (i = 1; i < argc; i++) {
         do_cat(argv[i]);
@@ -31,7 +30,12 @@ do_cat(const char *path)
     unsigned char buf[BUFFER_SIZE];
     int n;
 
-    fd = open(path, O_RDONLY);
+    if (path != NULL) {
+        fd = open(path, O_RDONLY);
+    } else {
+        fd = STDIN_FILENO;
+    }
+        
     if (fd < 0) die(path);
     for(;;) {
         n = read(fd, buf, sizeof buf);
